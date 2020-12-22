@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title> Server Status </title>
+        <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+        </script>
+        <script>
+            function getFormData($form){
+                var unindexed_array = $form.serializeArray();
+                var indexed_array = {};
+
+                $.map(unindexed_array, function(n, i){
+                    indexed_array[n['name']] = n['value'];
+                });
+
+                return indexed_array;
+            }
+
+            // get data demo
+            $(document).ready(function () {
+                $("#submit").on('click', function(){
+                    // send ajax
+                    
+                    $.ajax({
+                        url: '/api/v1.0/plane', // url where to submit the request
+                        type : "POST", // type of action POST || GET
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        data : JSON.stringify(getFormData($("#form"))), // post data || get data
+                        success : function(result) {
+                            // you can see the result from the console
+                            // tab of the developer tools
+                            console.log(result);
+                            alert('Success');
+                            window.location.href = "./list_plane.html";
+                        },
+                        error: function(xhr, resp, text) {
+                            console.log(xhr, resp, text);
+                            alert('Failed');
+                        }
+                    })
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <div>
+            <a href="./list_plane.html">List Plane</a> | <a href="./create_plane.html">Create Plane</a> | <a href="./buy_plane.html">Buy</a> | <a href="./index.html">Home</a>
+        </div>
+
+        <form id="form" accept="" method="post">
+            airlineName: <input type="text" name="airlineName" value="CA"><br>
+            
+            departure_airportName: <input type="text" name="departure_airportName" value="JB"><br>
+            departure_cityName: <input type="text" name="departure_cityName" value="CQ"><br>
+
+            arrival_airportName: <input type="text" name="arrival_airportName" value="SL"><br>
+            arrival_cityName: <input type="text" name="arrival_cityName" value="CD"><br>
+            
+            departureDate: <input type="text" name="departureDate" value="2020-07-23 20:00:00"><br>
+            arrivalDate: <input type="text" name="arrivalDate" value="2020-07-23 22:00:00"><br>
+
+            flightId: <input type="text" name="flightId" value="4"><br>
+            flightNumber: <input type="text" name="flightNumber" value="3344"><br>
+
+            price: <input type="text" name="price" value="1200"><br>
+            punctualityRate: <input type="text" name="punctualityRate" value="1"><br>
+            special_price: <input type="text" name="special_price" value="1100"><br>
+            <input id="submit" type="button" name="submit" value="submit">
+        </form>
+    </body>
+</html>

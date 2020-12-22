@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title> Server Status </title>
+        <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+        </script>
+        <script>
+            var getUrlParameter = function getUrlParameter(sParam) {
+                var sPageURL = window.location.search.substring(1),
+                    sURLVariables = sPageURL.split('&'),
+                    sParameterName,
+                    i;
+
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                    }
+                }
+            };
+
+            // get data demo
+            $(document).ready(function () {
+                $.get('http://localhost:8080/api/v1.0/user/' + getUrlParameter("user_id"), (data) => {
+                    $(text).text(JSON.stringify(data));
+                });                
+            });
+        </script>
+    </head>
+
+    <body>
+        <div>
+            <a href="./list_user.html">List Admin</a> | <a href="./create_user.html">Create Admin</a> | <a href="./index.html">Home</a>
+        </div>
+        <p id="text"></p>
+    </body>
+</html>

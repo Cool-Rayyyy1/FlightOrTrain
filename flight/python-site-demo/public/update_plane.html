@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title> Server Status </title>
+        <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+        </script>
+        <script>
+            function getFormData($form){
+                var unindexed_array = $form.serializeArray();
+                var indexed_array = {};
+
+                $.map(unindexed_array, function(n, i){
+                    indexed_array[n['name']] = n['value'];
+                });
+
+                return indexed_array;
+            }
+
+            var getUrlParameter = function getUrlParameter(sParam) {
+                var sPageURL = window.location.search.substring(1),
+                    sURLVariables = sPageURL.split('&'),
+                    sParameterName,
+                    i;
+
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+                    }
+                }
+            };
+
+            // get data demo
+            $(document).ready(function () {
+                $.get('/api/v1.0/plane/' + getUrlParameter("flight_id"), (data)=>{
+                    plane = data["plane"]
+                    console.log(plane)
+                    $("#flightId").val(plane["flightId"])
+                    $("#airlineName").val(plane["airlineName"])
+                    $("#flightNumber").val(plane["flightNumber"])
+                    $("#departure_cityName").val(plane["departure_cityName"])
+                    $("#departure_airportName").val(plane["departure_airportName"])
+                    $("#arrival_cityName").val(plane["arrival_cityName"])
+                    $("#arrival_airportName").val(plane["arrival_airportName"])
+                    $("#departureDate").val(plane["departureDate"])
+                    $("#arrivalDate").val(plane["arrivalDate"])
+                    $("#punctualityRate").val(plane["punctualityRate"])
+                    $("#price").val(plane["price"])
+                    $("#special_price").val(plane["special_price"])
+                });
+
+                $("#submit").on('click', function(){
+                    // send ajax
+                    
+                    $.ajax({
+                        url: '/api/v1.0/plane/' + $("#flightId").val(), // url where to submit the request
+                        type : "PUT", // type of action POST || GET
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        data : JSON.stringify(getFormData($("#form"))), // post data || get data
+                        success : function(result) {
+                            // you can see the result from the console
+                            // tab of the developer tools
+                            console.log(result);
+                            alert('Success');
+                            window.location.href = "./list_plane.html";
+                        },
+                        error: function(xhr, resp, text) {
+                            console.log(xhr, resp, text);
+                            alert('Failed');
+                        }
+                    })
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <div>
+            <a href="./list_plane.html">List Plane</a> | <a href="./create_plane.html">Create Plane</a> | <a href="./buy_plane.html">Buy</a> | <a href="./index.html">Home</a>
+        </div>
+
+        <form id="form" accept="" method="post">
+            airlineName: <input id="airlineName" type="text" name="airlineName" value=""><br>
+            
+            departure_airportName: <input id="departure_airportName" type="text" name="departure_airportName" value="JB"><br>
+            departure_cityName: <input id="departure_cityName" type="text" name="departure_cityName" value="CQ"><br>
+
+            arrival_airportName: <input id="arrival_airportName" type="text" name="arrival_airportName" value="SL"><br>
+            arrival_cityName: <input id="arrival_cityName" type="text" name="arrival_cityName" value="CD"><br>
+            
+            departureDate: <input id="departureDate" type="text" name="departureDate" value="2020-07-23 20:00:00"><br>
+            arrivalDate: <input id="arrivalDate" type="text" name="arrivalDate" value="2020-07-23 22:00:00"><br>
+
+            flightId: <input id="flightId" type="text" name="flightId" value="4"><br>
+            flightNumber: <input id="flightNumber" type="text" name="flightNumber" value="3344"><br>
+
+            price: <input id="price" type="text" name="price" value="1200"><br>
+            punctualityRate: <input id="punctualityRate" type="text" name="punctualityRate" value="1"><br>
+            special_price: <input id="special_price" type="text" name="special_price" value="1100"><br>
+            <input id="submit" id="airlineName" type="button" name="submit" value="submit">
+        </form>
+    </body>
+</html>

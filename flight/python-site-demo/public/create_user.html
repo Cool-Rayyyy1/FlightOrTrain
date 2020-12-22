@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title> Server Status </title>
+        <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+        </script>
+        <script>
+            function getFormData($form){
+                var unindexed_array = $form.serializeArray();
+                var indexed_array = {};
+
+                $.map(unindexed_array, function(n, i){
+                    indexed_array[n['name']] = n['value'];
+                });
+
+                return indexed_array;
+            }
+
+            // get data demo
+            $(document).ready(function () {
+                $("#submit").on('click', function(){
+                    // send ajax
+                    
+                    $.ajax({
+                        url: '/api/v1.0/user', // url where to submit the request
+                        type : "POST", // type of action POST || GET
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        data : JSON.stringify(getFormData($("#form"))), // post data || get data
+                        success : function(result) {
+                            // you can see the result from the console
+                            // tab of the developer tools
+                            console.log(result);
+                            alert('Success');
+                            window.location.href = "./list_user.html";
+                        },
+                        error: function(xhr, resp, text) {
+                            console.log(xhr, resp, text);
+                            alert('Failed');
+                        }
+                    })
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <div>
+            <a href="./list_user.html">List Admin</a> | <a href="./create_user.html">Create Admin</a> | <a href="./index.html">Home</a>
+        </div>
+
+        <form id="form" accept="" method="post">
+            Username: <input type="text" name="username" value="username"><br>
+            Password: <input type="text" name="password" value="password"><br>
+            Comment: <input type="text" name="comment" value="comment"><br>
+            <input id="submit" type="button" name="submit" value="submit">
+        </form>
+    </body>
+</html>
